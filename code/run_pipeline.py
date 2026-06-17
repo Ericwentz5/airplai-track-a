@@ -96,8 +96,8 @@ def run(video_path: str, output_dir: str):
             else:
                 teams = np.array([])
 
-            # --- Jersey OCR (every 5 frames) ---
-            if frame_idx % 5 == 0 and player_dets.tracker_id is not None:
+            # --- Jersey OCR (every 30 frames) ---
+            if frame_idx % 30 == 0 and player_dets.tracker_id is not None:
                 for bbox, tid in zip(player_dets.xyxy, player_dets.tracker_id):
                     x1, y1, x2, y2 = bbox.astype(int)
                     mid_y = y1 + (y2 - y1) // 2
