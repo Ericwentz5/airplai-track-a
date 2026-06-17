@@ -96,8 +96,8 @@ def run(video_path: str, output_dir: str):
             else:
                 teams = np.array([])
 
-            # --- Jersey OCR (every 5 frames) ---
-            if frame_idx % 5 == 0:
+            # --- Jersey OCR (every 30 frames) ---
+            if frame_idx % 30 == 0:
                 number_dets = dets[dets.class_id == NUMBER_CLASS_ID]
                 padded = sv.clip_boxes(sv.pad_boxes(xyxy=number_dets.xyxy, px=10, py=10), (frame_w, frame_h))
 

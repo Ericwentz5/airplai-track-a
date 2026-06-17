@@ -42,9 +42,9 @@ STRIDE = 30       # sample every Nth frame for team classifier training
 BATCH_SIZE = 32   # SigLIP embedding batch size
 
 # --- Jersey OCR validation ---
-OCR_CONSECUTIVE_FRAMES = 3  # number must appear N times to be accepted
+OCR_CONSECUTIVE_FRAMES = 1  # number must appear N times to be accepted
 
 # --- Paths ---
-VIDEO_PATH = "/Users/ericwentz/Desktop/Coaching_AI/test_mac_1.mov"
+VIDEO_PATH = os.environ.get("VIDEO_PATH", "data/test_mac_1.mov")
 CROPS_DIR = "data/crops"
 EVAL_SET_PATH = "data/eval_set.json"
