@@ -106,6 +106,7 @@ def run(video_path: str, output_dir: str):
                     for box in padded
                 ]
 
+                print(f"[frame {frame_idx}] number_dets={len(number_dets)}")
                 # match number crops to player tracks via IoU
                 if len(number_dets) > 0 and len(player_dets) > 0:
                     iou = sv.box_iou_batch(player_dets.xyxy, number_dets.xyxy)
@@ -114,6 +115,7 @@ def run(video_path: str, output_dir: str):
                         if iou[player_idx, num_idx] > 0.1 and player_dets.tracker_id is not None:
                             tid = int(player_dets.tracker_id[player_idx])
                             number = read_number(ocr_model, num_crop)
+                            print(f"  track {tid} → OCR: {repr(number)}")
                             number_tracker.update(tid, number)
 
             # --- Build labels ---
