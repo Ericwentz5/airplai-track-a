@@ -21,7 +21,7 @@ from config import SIGLIP_MODEL_PATH, BATCH_SIZE
 class TeamClassifier:
     def __init__(self, device: str = None):
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
-        self.model = SiglipVisionModel.from_pretrained(SIGLIP_MODEL_PATH).to(device)
+        self.model = SiglipVisionModel.from_pretrained(SIGLIP_MODEL_PATH).to(self.device)
         self.processor = AutoProcessor.from_pretrained(SIGLIP_MODEL_PATH)
         self.reducer = umap.UMAP(n_components=3)
         self.cluster_model = KMeans(n_clusters=2)
