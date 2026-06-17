@@ -19,7 +19,7 @@ def load_ocr_model():
 
 def read_number(model, crop) -> str:
     """Run OCR on a single crop. Returns digit string or empty string."""
-    raw = model.predict(crop, JERSEY_OCR_PROMPT)[0]
+    raw = model.infer(crop, prompt=JERSEY_OCR_PROMPT)[0].response
     digits = re.sub(r"[^0-9]", "", str(raw))
     return digits if 1 <= len(digits) <= 2 else ""
 
