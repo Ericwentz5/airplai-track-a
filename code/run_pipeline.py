@@ -97,17 +97,22 @@ def run(video_path: str, output_dir: str):
                 teams = np.array([])
 
             # --- Jersey OCR (every 30 frames) ---
-            if frame_idx % 30 == 0 and player_dets.tracker_id is not None:
-                for bbox, tid in zip(player_dets.xyxy, player_dets.tracker_id):
-                    x1, y1, x2, y2 = bbox.astype(int)
-                    mid_y = y1 + (y2 - y1) // 2
-                    jersey_crop = frame[y1:mid_y, x1:x2]
-                    if jersey_crop.size == 0:
-                        continue
-                    jersey_crop = sv.resize_image(jersey_crop, resolution_wh=(224, 224))
-                    number = read_number(ocr_model, jersey_crop)
-                    print(f"  track {int(tid)} → OCR: {repr(number)}")
-                    number_tracker.update(int(tid), number)
+            if frame_idx % 30 == 0:
+                number_result = detection_model.infer(frame, confidence=0.1, iou_threshold=PLAYER_DETECTION_MODEL_IOU_THRESHOLD)[0]
+                number_dets = sv.Detections.from_inference(number_result)
+                number_dets = number_dets[number_dets.class_id == NUMBER_CLASS_ID]
+                padded = sv.clip_boxes(sv.pad_boxes(xyxy=number_dets.xyxy, px=10, py=10), (frame_w, frame_h))
+                number_crops = [sv.resize_image(sv.crop_image(frame, box), resolution_wh=(224, 224)) for box in padded]
+                print(f"[frame {frame_idx}] number_dets={len(number_dets)}")
+                if len(number_dets) > 0 and len(player_dets) > 0 and player_dets.tracker_id is not None:
+                    iou = sv.box_iou_batch(player_dets.xyxy, number_dets.xyxy)
+                    for num_idx, num_crop in enumerate(number_crops):
+                        player_idx = np.argmax(iou[:, num_idx])
+                        if iou[player_idx, num_idx] > 0.05:
+                            tid = int(player_dets.tracker_id[player_idx])
+                            number = read_number(ocr_model, num_crop)
+                            print(f"  track {tid} → OCR: {repr(number)}")
+                            number_tracker.update(tid, number)
 
             # --- Build labels ---
             labels = []
@@ -115,11 +120,13 @@ def run(video_path: str, output_dir: str):
                 team = int(teams[i]) if i < len(teams) else 0
                 number = number_tracker.get(int(tid))
                 labels.append(f"#{number} {TEAM_NAMES[team]}")
+                x1, y1, x2, y2 = player_dets.xyxy[i].astype(int)
                 predictions.append({
                     "frame": frame_idx,
                     "track_id": int(tid),
                     "team_pred": team,
                     "number_pred": number,
+                    "bbox": [int(x1), int(y1), int(x2 - x1), int(y2 - y1)],
                 })
 
             # --- Annotate ---
@@ -134,8 +141,16 @@ def run(video_path: str, output_dir: str):
     with open(pred_path, "w") as f:
         json.dump(predictions, f, indent=2)
 
+    # --- Save MOT format ---
+    mot_path = output_dir / "mot.txt"
+    with open(mot_path, "w") as f:
+        for p in predictions:
+            x, y, w, h = p["bbox"]
+            f.write(f"{p['frame']},{p['track_id']},{x},{y},{w},{h},1,-1,-1,-1\n")
+
     print(f"\nAnnotated video: {output_video}")
     print(f"Predictions:     {pred_path}")
+    print(f"MOT output:      {mot_path}")
 
 
 if __name__ == "__main__":
