@@ -97,13 +97,13 @@ def run(video_path: str, output_dir: str):
                 teams = np.array([])
 
             # --- Jersey OCR (every 30 frames) ---
+            number_dets = sv.Detections.empty()
             if frame_idx % 30 == 0:
                 number_result = detection_model.infer(frame, confidence=0.1, iou_threshold=PLAYER_DETECTION_MODEL_IOU_THRESHOLD)[0]
                 number_dets = sv.Detections.from_inference(number_result)
                 number_dets = number_dets[number_dets.class_id == NUMBER_CLASS_ID]
                 padded = sv.clip_boxes(sv.pad_boxes(xyxy=number_dets.xyxy, px=10, py=10), (frame_w, frame_h))
                 number_crops = [sv.resize_image(sv.crop_image(frame, box), resolution_wh=(224, 224)) for box in padded]
-                print(f"[frame {frame_idx}] number_dets={len(number_dets)}")
                 if len(number_dets) > 0 and len(player_dets) > 0 and player_dets.tracker_id is not None:
                     iou = sv.box_iou_batch(player_dets.xyxy, number_dets.xyxy)
                     for num_idx, num_crop in enumerate(number_crops):
@@ -111,7 +111,6 @@ def run(video_path: str, output_dir: str):
                         if iou[player_idx, num_idx] > 0.05:
                             tid = int(player_dets.tracker_id[player_idx])
                             number = read_number(ocr_model, num_crop)
-                            print(f"  track {tid} → OCR: {repr(number)}")
                             number_tracker.update(tid, number)
 
             # --- Build labels ---
@@ -134,6 +133,8 @@ def run(video_path: str, output_dir: str):
             team_ids = teams.astype(int) if len(teams) > 0 else np.array([], dtype=int)
             annotated = box_annotator.annotate(annotated, player_dets, custom_color_lookup=team_ids)
             annotated = label_annotator.annotate(annotated, player_dets, labels=labels, custom_color_lookup=team_ids)
+            if len(number_dets) > 0:
+                annotated = sv.BoxAnnotator(color=sv.Color.RED, thickness=1).annotate(annotated, number_dets)
             sink.write_frame(annotated)
 
     # --- Save predictions ---
