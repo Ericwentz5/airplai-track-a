@@ -23,8 +23,8 @@ class TeamClassifier:
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.model = SiglipVisionModel.from_pretrained(SIGLIP_MODEL_PATH).to(self.device)
         self.processor = AutoProcessor.from_pretrained(SIGLIP_MODEL_PATH)
-        self.reducer = umap.UMAP(n_components=3)
-        self.cluster_model = KMeans(n_clusters=2)
+        self.reducer = umap.UMAP(n_components=3, random_state=42)
+        self.cluster_model = KMeans(n_clusters=2, random_state=42, n_init=10)
         self._fitted = False
 
     def _embed(self, crops: list) -> np.ndarray:
@@ -49,8 +49,10 @@ class TeamClassifier:
         """Fit the classifier on a list of numpy BGR player crops."""
         embeddings = self._embed(crops)
         projections = self.reducer.fit_transform(embeddings)
-        self.cluster_model.fit(projections)
+        labels = self.cluster_model.fit_predict(projections)
         self._fitted = True
+        unique, counts = np.unique(labels, return_counts=True)
+        print(f"Team clusters: {dict(zip(unique.tolist(), counts.tolist()))}")
         return self
 
     def predict(self, crops: list) -> np.ndarray:
