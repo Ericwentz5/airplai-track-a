@@ -118,7 +118,7 @@ def run(video_path: str, output_dir: str):
 
             # --- Build labels ---
             labels = []
-            for i, tid in enumerate(player_dets.tracker_id or []):
+            for i, tid in enumerate(player_dets.tracker_id if player_dets.tracker_id is not None else []):
                 team = int(teams[i]) if i < len(teams) else 0
                 number = number_tracker.get(int(tid))
                 labels.append(f"#{number} {TEAM_NAMES[team]}")
