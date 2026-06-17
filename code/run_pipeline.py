@@ -96,27 +96,18 @@ def run(video_path: str, output_dir: str):
             else:
                 teams = np.array([])
 
-            # --- Jersey OCR (every 30 frames) ---
-            if frame_idx % 30 == 0:
-                number_dets = dets[dets.class_id == NUMBER_CLASS_ID]
-                padded = sv.clip_boxes(sv.pad_boxes(xyxy=number_dets.xyxy, px=10, py=10), (frame_w, frame_h))
-
-                number_crops = [
-                    sv.resize_image(sv.crop_image(frame, box), resolution_wh=(224, 224))
-                    for box in padded
-                ]
-
-                print(f"[frame {frame_idx}] number_dets={len(number_dets)}")
-                # match number crops to player tracks via IoU
-                if len(number_dets) > 0 and len(player_dets) > 0:
-                    iou = sv.box_iou_batch(player_dets.xyxy, number_dets.xyxy)
-                    for num_idx, num_crop in enumerate(number_crops):
-                        player_idx = np.argmax(iou[:, num_idx])
-                        if iou[player_idx, num_idx] > 0.1 and player_dets.tracker_id is not None:
-                            tid = int(player_dets.tracker_id[player_idx])
-                            number = read_number(ocr_model, num_crop)
-                            print(f"  track {tid} → OCR: {repr(number)}")
-                            number_tracker.update(tid, number)
+            # --- Jersey OCR (every 5 frames) ---
+            if frame_idx % 5 == 0 and player_dets.tracker_id is not None:
+                for bbox, tid in zip(player_dets.xyxy, player_dets.tracker_id):
+                    x1, y1, x2, y2 = bbox.astype(int)
+                    mid_y = y1 + (y2 - y1) // 2
+                    jersey_crop = frame[y1:mid_y, x1:x2]
+                    if jersey_crop.size == 0:
+                        continue
+                    jersey_crop = sv.resize_image(jersey_crop, resolution_wh=(224, 224))
+                    number = read_number(ocr_model, jersey_crop)
+                    print(f"  track {int(tid)} → OCR: {repr(number)}")
+                    number_tracker.update(int(tid), number)
 
             # --- Build labels ---
             labels = []
