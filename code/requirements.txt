@@ -5,3 +5,5 @@ python-dotenv
 opencv-python
 numpy
 tqdm
+pycuda
+onnxruntime-gpu==1.19.2

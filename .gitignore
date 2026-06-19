@@ -4,4 +4,5 @@ __pycache__/
 data/crops/
 *.mov
 *.mp4
+!data/sample.mp4
 *.pt

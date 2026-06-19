@@ -1,35 +1,19 @@
 # Data
 
-## Video Footage
+## Sample Clip
 
-The evaluation video (`test_mac_1.mov`) is a ~60 second clip of a Macalester College
-basketball game filmed from a fixed sideline camera.
+`sample.mp4` is a 10-second clip of a Macalester College basketball game filmed from a fixed sideline camera. Included for sanity-checking the pipeline.
 
 - **Teams:** Macalester College (orange jerseys) vs. opponent (black jerseys)
 - **Camera:** Fixed, single angle, no broadcast graphics
 - **Resolution:** 1080p
 
-This clip is not included in the repository due to size. A short 10-second sample
-(`sample.mov`) is included for sanity-checking the pipeline.
+## Full Evaluation Clip
 
-To reproduce results on the full clip, contact the repository owner.
+The full evaluation clip (`test_mac_1.mov`, ~60 seconds) is not included due to file size. Contact the repository owner to obtain it.
 
-## Eval Set
+## Running on the Sample
 
-`eval_set.json` contains manually labeled player and number crops extracted from
-`test_mac_1.mov`. Each entry has:
-
-- `path` — relative path to the crop image
-- `team_label` — 0 (Macalester/orange) or 1 (opponent/black)
-- `number_label` — jersey number string, e.g. "23"
-
-To rebuild the eval set from scratch:
 ```bash
-python code/build_eval_set.py --video path/to/test_mac_1.mov
+python code/run_pipeline.py --video data/sample.mp4 --output results/
 ```
-
-## Limitations
-
-- Single game clip, single camera angle
-- ~100 labeled crops — sufficient for evaluation but not statistical significance
-- Jersey numbers only labeled when clearly visible (facing camera, not blurred)
