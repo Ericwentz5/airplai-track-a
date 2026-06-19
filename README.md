@@ -23,7 +23,7 @@ echo "ROBOFLOW_API_KEY=your_key_here" > code/.env
 ## Reproduce Results
 
 ```bash
-python code/run_pipeline.py --video path/to/clip.mov --output results/
+python code/run_pipeline.py --video data/sample.mp4 --output results/
 ```
 
 Outputs:
@@ -31,6 +31,8 @@ Outputs:
 - `results/mot.txt` — MOT-format output: `frame,track_id,x,y,w,h,conf,-1,-1,-1`
 
 ## Running in Google Colab (T4 GPU)
+
+Open a new Colab notebook with a T4 GPU runtime and run:
 
 ```python
 from google.colab import drive, userdata
@@ -43,15 +45,14 @@ drive.mount('/content/drive')
 
 os.environ['ROBOFLOW_API_KEY'] = userdata.get('ROBOFLOW_API_KEY')
 
-VIDEO_PATH = '/content/drive/MyDrive/AirPlai/test_mac_1.mov'
-!python code/run_pipeline.py --video "{VIDEO_PATH}" --output results/
+!python code/run_pipeline.py --video data/sample.mp4 --output results/
 ```
 
 ## Data
 
-The evaluation video (`test_mac_1.mov`) is a ~16 second clip of a Macalester College basketball game filmed from a fixed sideline camera. It is not included in the repository due to size. A short sample clip is included in `data/` for sanity-checking.
+A 10-second sample clip (`data/sample.mp4`) is included for sanity-checking. It shows a Macalester College basketball game filmed from a fixed sideline camera (orange jerseys vs. black jerseys, 1080p, no broadcast graphics).
 
-A 10-second sample (`data/sample.mp4`) is included for sanity-checking. To obtain the full evaluation clip, contact the repository owner.
+The full evaluation clip is not included due to file size. Contact the repository owner to obtain it.
 
 ## Models
 
@@ -72,8 +73,9 @@ airplai-track-a/
 │   ├── run_pipeline.py     # end-to-end inference script
 │   └── requirements.txt
 ├── data/
-│   └── README.md           # data instructions
-└── results/                # output video, mot.txt
+│   ├── sample.mp4          # 10-second sample clip
+│   └── README.md
+└── results/                # output video and mot.txt written here
 ```
 
 ## AI Assistance
