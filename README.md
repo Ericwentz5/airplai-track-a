@@ -13,6 +13,8 @@ Detects and tracks all players across a basketball clip using RF-DETR + ByteTrac
 pip install supervision==0.27.0 inference roboflow python-dotenv opencv-python numpy tqdm pycuda onnxruntime-gpu==1.19.2
 ```
 
+> **GPU note:** `onnxruntime-gpu==1.19.2` is pinned specifically for CUDA 12.x (tested on Colab T4). Newer versions (1.20+) require CUDA 13 and will fail with a `libcudart` error. If you upgrade and hit that error, downgrade back to 1.19.2.
+
 > **CPU-only fallback:** replace `pycuda onnxruntime-gpu==1.19.2` with `onnxruntime`. Significantly slower.
 
 Set your Roboflow API key:
