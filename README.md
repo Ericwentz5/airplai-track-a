@@ -65,6 +65,11 @@ os.environ['ROBOFLOW_API_KEY'] = userdata.get('ROBOFLOW_API_KEY')
 !python code/run_pipeline.py --video data/sample.mp4 --output results/
 ```
 
+**Cell 6 — Save results to Google Drive**
+```python
+!cp -r results/ '/content/drive/MyDrive/AirPlai/results/'
+```
+
 ## Data
 
 A 10-second sample clip (`data/sample.mp4`) is included for sanity-checking. It shows a Macalester College basketball game filmed from a fixed sideline camera (orange jerseys vs. black jerseys, 1080p, no broadcast graphics).
