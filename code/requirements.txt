@@ -1,12 +1,6 @@
 supervision==0.27.0
 inference
 roboflow
-transformers
-torch
-umap-learn
-scikit-learn
-more-itertools
-Pillow
 python-dotenv
 opencv-python
 numpy
