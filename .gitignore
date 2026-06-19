@@ -5,4 +5,5 @@ data/crops/
 *.mov
 *.mp4
 !data/sample.mp4
+!results/macalester_short_annotated.mp4
 *.pt
