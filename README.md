@@ -32,19 +32,36 @@ Outputs:
 
 ## Running in Google Colab (T4 GPU)
 
-Open a new Colab notebook with a T4 GPU runtime and run:
+**Recommended.** The pipeline requires a CUDA-capable GPU. If you don't have one locally, run it in Google Colab with a T4 GPU runtime (Runtime → Change runtime type → T4 GPU).
 
+Open a new Colab notebook and run each cell in order:
+
+**Cell 1 — Mount Google Drive**
 ```python
-from google.colab import drive, userdata
-import os
+from google.colab import drive
 drive.mount('/content/drive')
+```
 
+**Cell 2 — Clone repo**
+```python
 !git clone https://github.com/Ericwentz5/airplai-track-a.git
 %cd airplai-track-a
+```
+
+**Cell 3 — Install dependencies**
+```python
 !pip install -q supervision==0.27.0 inference roboflow python-dotenv opencv-python numpy tqdm pycuda onnxruntime-gpu==1.19.2
+```
 
+**Cell 4 — Set API key** (add `ROBOFLOW_API_KEY` to Colab Secrets first)
+```python
+from google.colab import userdata
+import os
 os.environ['ROBOFLOW_API_KEY'] = userdata.get('ROBOFLOW_API_KEY')
+```
 
+**Cell 5 — Run pipeline**
+```python
 !python code/run_pipeline.py --video data/sample.mp4 --output results/
 ```
 
