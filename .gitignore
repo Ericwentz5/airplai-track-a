@@ -3,6 +3,8 @@ __pycache__/
 *.pyc
 data/crops/
 *.mov
+!results/failure_cases/ID_Switching.mov
+!results/visualizations/Great_player_Tracking_clip.mov
 *.mp4
 !data/sample.mp4
 !results/macalester_short_annotated.mp4

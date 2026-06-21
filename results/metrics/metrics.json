@@ -1,0 +1,10 @@
+{
+  "sequence": "v_-6Os86HzwCs_c001",
+  "dataset": "SportsMOT",
+  "metric": "MOTA",
+  "mota": 0.603,
+  "fp": 1665,
+  "fn": 1117,
+  "id_switches": 423,
+  "total_gt_detections": 8074
+}
