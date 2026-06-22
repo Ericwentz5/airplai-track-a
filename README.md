@@ -91,15 +91,25 @@ All models are downloaded automatically via the Roboflow API — no local weight
 
 ```
 airplai-track-a/
+├── design.pdf                          # Part 1 system design document
+├── report.pdf                          # Part 2 methodology and results
+├── README.md
 ├── code/
 │   ├── src/
-│   │   └── config.py       # model IDs, class IDs, paths
-│   ├── run_pipeline.py     # end-to-end inference script
+│   │   └── config.py                   # model IDs, class IDs, paths
+│   ├── run_pipeline.py                 # end-to-end inference script
+│   ├── Track_B_pipeline.ipynb          # Colab notebook
 │   └── requirements.txt
 ├── data/
-│   ├── sample.mp4          # 10-second sample clip
+│   ├── sample.mp4                      # 10-second sample clip
 │   └── README.md
-└── results/                # output video and mot.txt written here
+└── results/
+    ├── macalester_short_annotated.mp4  # annotated output video
+    ├── macalester_mot.txt              # MOT-format tracking output
+    ├── metrics/
+    │   └── metrics.json                # MOTA evaluation results
+    ├── visualizations/                 # screenshots and clips of tracking working
+    └── failure_cases/                  # screenshots and clips of failure modes
 ```
 
 ## AI Assistance
