@@ -36,7 +36,9 @@ Outputs:
 
 **Recommended.** The pipeline requires a CUDA-capable GPU. If you don't have one locally, run it in Google Colab with a T4 GPU runtime (Runtime → Change runtime type → T4 GPU).
 
-Open a new Colab notebook and run each cell in order:
+**Option A — Use the included notebook:** Open `code/Track_B_pipeline.ipynb` directly in Colab. It contains all cells pre-configured and ready to run. The notebook clones this repo and executes `run_pipeline.py` — no manual copy-pasting needed.
+
+**Option B — Open a new notebook** and run each cell in order:
 
 **Cell 1 — Mount Google Drive**
 ```python
@@ -111,6 +113,27 @@ airplai-track-a/
     ├── visualizations/                 # screenshots and clips of tracking working
     └── failure_cases/                  # screenshots and clips of failure modes
 ```
+
+## Troubleshooting
+
+**`pycuda` build fails**
+pycuda requires CUDA toolkit headers to compile. If it fails, use the CPU fallback instead:
+```bash
+pip install onnxruntime
+```
+Then set `CUDA_VISIBLE_DEVICES=''` before running. Slower but works.
+
+**`libcudart` error with onnxruntime-gpu**
+Newer versions of `onnxruntime-gpu` (1.20+) require CUDA 13. Pin to 1.19.2:
+```bash
+pip install onnxruntime-gpu==1.19.2
+```
+
+**`Could not open video` error**
+Check the video path is correct and the file exists. Use absolute paths in Colab (e.g. `/content/airplai-track-a/data/sample.mp4`).
+
+**`ROBOFLOW_API_KEY` not found**
+Make sure you've added it to Colab Secrets (key icon in left sidebar) or created a `code/.env` file locally.
 
 ## AI Assistance
 
