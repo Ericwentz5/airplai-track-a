@@ -18,4 +18,4 @@ PLAYER_CLASS_IDS = [3, 4, 5, 6, 7]  # player + action variants
 REFEREE_CLASS_ID = 8
 
 # --- Paths ---
-VIDEO_PATH = os.environ.get("VIDEO_PATH", "data/test_mac_1.mov")
+VIDEO_PATH = os.environ.get("VIDEO_PATH", "data/sample.mp4")

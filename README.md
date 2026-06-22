@@ -29,8 +29,8 @@ python code/run_pipeline.py --video data/sample.mp4 --output results/
 ```
 
 Outputs:
-- `results/macalester_short_annotated.mp4` — video with bounding boxes and track ID labels
-- `results/macalester_mot.txt` — MOT-format output: `frame,track_id,x,y,w,h,conf,-1,-1,-1`
+- `results/annotated.mp4` — video with bounding boxes and track ID labels
+- `results/mot.txt` — MOT-format output: `frame,track_id,x,y,w,h,conf,-1,-1,-1`
 
 ## Running in Google Colab (T4 GPU)
 
